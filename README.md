@@ -1,4 +1,5 @@
-# Nombre del Proyecto
+# MINIBLOG DE AGOS
+![Kirby is here](https://i.pinimg.com/564x/3f/78/fd/3f78fd0cd0e8b2ee0b10eeaca003af96.jpg)
 
 Un miniblog que permite a los usuarios crear y compartir sus propios posteos. 
 
@@ -19,7 +20,8 @@ Un miniblog que permite a los usuarios crear y compartir sus propios posteos.
 6. Después de realizar tus cambios ejecuta: `flask db migrate -m "..."`
 7. Si es necesario, cambia la ruta de la base de datos en tu app.py
 8. Ejecuta las migraciones de la base de datos: `flask db upgrade`
-9. Inicia la aplicación: `flask run`
+9. Vas a tener que cambiar la ruta del "tailwind.config.js" así ubicas la carpeta de tus templates correctamente.
+10. Inicia la aplicación: `flask run`
 
 ## Uso
 
