@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>{% block title %} {% endblock %}</title>
+    <nav class="bg-gradient-to-r from-pink-500 via-pink-600 to-pink-700">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="relative flex h-16 items-center justify-between">
+                <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                    <div class="flex flex-shrink-0 items-center">
+                        <a href="{{ url_for('index') }}">
+                            <img class="h-8 w-auto" src="{{ url_for('static', filename='logo.png') }}" alt="Agos logo">
+                          </a>                          
+                    </div>
+                        <div class="hidden sm:ml-6 sm:block">
+                            <div class="flex space-x-4">
+                                <a href="{{ url_for('posteos') }}" class="bg-pink-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Posteos</a>
+                                <a href="{{ url_for('crear_posteo') }}" class="text-gray-300 hover:bg-pink-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Crear Post</a>
+                            {% if 'user_id' not in session %}
+                                <a href="{{ url_for('login') }}" class="text-gray-300 hover:bg-pink-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Iniciar sesión</a>
+                             {% else %}
+                                <a href="{{ url_for('logout_view') }}" class="text-gray-300 hover:bg-pink-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Cerrar sesión</a>
+                            {% endif %}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </nav>
+</head>
+<body>
+{% block content %}
+{% endblock %}
+</body>
+</html>
