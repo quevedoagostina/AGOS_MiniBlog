@@ -12,10 +12,14 @@ Un miniblog que permite a los usuarios crear y compartir sus propios posteos.
 ## Configuración
 
 1. Clona este repositorio: `git clone git@github.com:quevedoagostina/AGOS_MiniBlog.git`
-2. Instala las dependencias: `pip install -r requirements.txt`
-3. Configura las variables de entorno en el archivo `.env`
-4. Ejecuta las migraciones de la base de datos: `flask db upgrade`
-5. Inicia la aplicación: `flask run`
+2. Ve al directorio del proyecto: `cd AGOS_MiniBlog`
+3. Luego de crear tu propio entorno virtual, actívalo: `source tu_entorno/bin/activate`
+4. Instala las dependencias: `pip install -r requirements.txt`
+5. Crea las migraciones iniciales: `flask db init`
+6. Después de realizar tus cambios ejecuta: `flask db migrate -m "..."`
+7. Si es necesario, cambia la ruta de la base de datos en tu app.py
+8. Ejecuta las migraciones de la base de datos: `flask db upgrade`
+9. Inicia la aplicación: `flask run`
 
 ## Uso
 
