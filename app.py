@@ -25,6 +25,12 @@ def posteos():
     posts = Entrada.query.all()
     return render_template('posteos.html', posts=posts)
 
+@app.route('/categoria/<int:categoria_id>')
+def categoria(categoria_id):
+    categoria = Categoria.query.get(categoria_id)
+    entradas = categoria.entradas  
+    return render_template('categoria.html', categoria=categoria, entradas=entradas)
+
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':

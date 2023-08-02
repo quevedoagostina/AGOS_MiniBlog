@@ -5,6 +5,7 @@ Inicio
 {% endblock %} 
 
 {% block content %}
+
 <div class="container mx-auto">
     <div class="relative rounded-lg shadow-2xl bg-pink-900 overflow-hidden sm:rounded-3xl sm:px-8 lg:flex">
         <div class="lg:w-1/2">
@@ -28,5 +29,6 @@ Inicio
                 <source src="{{ url_for('static', filename='video.mp4') }}" type="video/mp4">
             </video>
         </div>
- 
- {% endblock %} 
+    </div>
+</div>
+{% endblock %}
