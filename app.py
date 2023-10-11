@@ -1,15 +1,36 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from datetime import datetime
+from sqlalchemy import ForeignKey
+from flask_jwt_extended import(
+    JWTManager, jwt_required, create_access_token, get_jwt_identity, get_jwt
+)
+from flask_marshmallow import Marshmallow
+from marshmallow import fields
+import secrets 
+from werkzeug.security import(
+    check_password_hash,
+    generate_password_hash,
+)
+from datetime import datetime, timedelta
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/miniblog'
 app.config['SECRET_KEY'] = '1234'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')  # Esta línea debe ir después de SECRET_KEY
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+jwt = JWTManager(app)
+ma = Marshmallow(app)
+
+load_dotenv()
 
 from models import Usuario, Entrada, Comentario, Categoria
+from schemas import UsuarioSchema, CategoriaSchema, EntradaSchema, ComentarioSchema
+# from schemaview import EntradasSchema
 
 @app.context_processor
 def categorias_disponibles():
@@ -18,6 +39,7 @@ def categorias_disponibles():
 
 @app.route('/')
 def index():
+    print(os.environ)
     return render_template('index.html')
 
 @app.route('/posteos')
@@ -35,7 +57,12 @@ def categoria(categoria_id):
 def registro():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password= request.form['password']
+        password_hasheada = generate_password_hash(
+            password=password, 
+            method="pbkdf2", 
+            salt_length=8
+            )
 
         # Verifica si el nombre de usuario ya existe en la base de datos
         usuario_existente = Usuario.query.filter_by(username=username).first()
@@ -43,7 +70,7 @@ def registro():
             flash('El nombre de usuario ya está en uso. Por favor, elige otro.', 'error')
         else:
             # Crea un nuevo usuario con las credenciales ingresadas
-            nuevo_usuario = Usuario(username=username, password=password)
+            nuevo_usuario = Usuario(username=username, password=password_hasheada)
             db.session.add(nuevo_usuario)
             db.session.commit()
             flash('Registro exitoso. Inicia sesión con tus nuevas credenciales.', 'success')
@@ -59,16 +86,45 @@ def login():
         password = request.form['password']
 
         # Verificar si el usuario existe y la contraseña es válida
-        usuario = Usuario.query.filter_by(username=username, password=password).first()
-        if usuario is not None:
+        usuario = Usuario.query.filter_by(username=username).first()
+        if usuario and check_password_hash(usuario.password, password):
+            # Generar un token de acceso único
+            access_token = secrets.token_hex(16)
+            # Calcular la fecha y hora de expiración
+            expiration_time = datetime.utcnow() + timedelta(minutes=30)
+            # Asignar el token y su expiración al usuario en la base de datos
+            usuario.access_token = access_token
+            usuario.token_expiration = expiration_time
+            db.session.commit()
             session['user_id'] = usuario.id
             flash('Inicio de sesión exitoso', 'success')
-            return redirect(url_for('crear_posteo'))  # Redirigir a la página de creación de posteos
+            # Redirigir a la página de creación de posteos con el token de acceso
+            return redirect(url_for('crear_posteo', access_token=access_token))
         else:
-            flash('Credenciales inválidas. Inténtalo de nuevo.', 'error')  # Mensaje de error en caso de credenciales inválidas
+            flash('Credenciales inválidas. Inténtalo de nuevo.', 'error')
 
     return render_template('login.html')
 
+# class UsuarioSchema(ma.Schema):
+#     id = fields.Integer(dump_only=True)
+#     username = fields.String()
+#     saludo_usuario = fields.Method('probando_metodo')
+
+#     def probando_metodo(self, obj):
+#         return f"Hola {obj.username}"
+
+# class UsuarioAdminSchema(ma.Schema):
+#     password = fields.String()
+
+
+# @app.route('/users')
+# def get_all_users():
+#     # Obtener todos los usuarios de la base de datos
+#     usuarios = Usuario.query.all()
+#     usuarios_schema = UsuarioSchema().dump(usuarios, many=True)
+
+#     # Devolver la lista de usuarios como respuesta JSON
+#     return jsonify(usuarios_schema) 
 
 @app.route('/crear_posteo', methods=['GET', 'POST'])
 def crear_posteo():
@@ -128,7 +184,6 @@ def logout_view():
         del session['user_id']
         flash('Has cerrado sesión', 'success')
     return redirect(url_for('index'))
-
 
 if __name__ == '__main__':
     db.create_all()
