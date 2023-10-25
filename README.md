@@ -12,7 +12,7 @@ Un miniblog que permite a los usuarios crear y compartir sus propios posteos.
 
 ## Configuración
 
-1. Clona este repositorio: `git clone git@github.com:quevedoagostina/AGOS_MiniBlog.git`
+1. Clona este repositorio: `git clone git@github.com:quevedoagostina/Bulfon_Quevedo_MiniBlog.git`
 2. Ve al directorio del proyecto: `cd AGOS_MiniBlog`
 3. Luego de crear tu propio entorno virtual, actívalo: `source tu_entorno/bin/activate`
 4. Instala las dependencias: `pip install -r requirements.txt`
