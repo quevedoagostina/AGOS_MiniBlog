@@ -1,4 +1,4 @@
-# MINIBLOG DE BULFON, Y QUEVEDO
+# MINIBLOG DE BULFON Y QUEVEDO
 ![Kirby is here](https://i.pinimg.com/564x/3f/78/fd/3f78fd0cd0e8b2ee0b10eeaca003af96.jpg)
 
 Un miniblog que permite a los usuarios crear y compartir sus propios posteos.
