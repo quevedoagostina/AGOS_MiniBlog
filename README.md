@@ -30,6 +30,3 @@ Clona el repositorio de GitHub en tu máquina local, crea un entorno virtual par
 ## Aclaración importante
 
 Hay un init_db.py para meter las categorías en la base de datos, para agregarlas ejecuta el script init_db.py. Desde el cmd, con el siguiente comando: "python init_db.py".
-
-Este readme.md cambialo, al final las migraciones ya estan subidas a github entonces no es necesario que se suba el init_db.py pero bueno que sea como una aclaracion por si borran la carpeta migrations y ya no es solo blog de AGos, ahora es el blog de Bulfon, Quevedo, y Agos.
-
