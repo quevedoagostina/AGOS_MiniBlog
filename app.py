@@ -30,7 +30,30 @@ load_dotenv()
 
 from models import Usuario, Entrada, Comentario, Categoria
 from schemas import UsuarioSchema, CategoriaSchema, EntradaSchema, ComentarioSchema
-# from schemaview import EntradasSchema
+from views import UsuarioView, EntradaView, ComentarioView, CategoriaView
+
+# Crear instancias de las clases MethodView
+usuario_view = UsuarioView.as_view('usuario_view')
+entrada_view = EntradaView.as_view('entrada_view')
+comentario_view = ComentarioView.as_view('comentario_view')
+categoria_view = CategoriaView.as_view('categoria_view')
+
+# Definir las rutas para acceder a las vistas
+app.add_url_rule('/usuarios/', defaults={'user_id': None}, view_func=usuario_view, methods=['GET'])
+app.add_url_rule('/usuarios/', view_func=usuario_view, methods=['POST'])
+app.add_url_rule('/usuarios/<int:user_id>', view_func=usuario_view, methods=['GET', 'PUT', 'DELETE'])
+
+app.add_url_rule('/entradas/', defaults={'entrada_id': None}, view_func=entrada_view, methods=['GET'])
+app.add_url_rule('/entradas/', view_func=entrada_view, methods=['POST'])
+app.add_url_rule('/entradas/<int:entrada_id>', view_func=entrada_view, methods=['GET', 'PUT', 'DELETE'])
+
+app.add_url_rule('/comentarios/', defaults={'comentario_id': None}, view_func=comentario_view, methods=['GET'])
+app.add_url_rule('/comentarios/', view_func=comentario_view, methods=['POST'])
+app.add_url_rule('/comentarios/<int:comentario_id>', view_func=comentario_view, methods=['GET', 'PUT', 'DELETE'])
+
+app.add_url_rule('/categorias/', defaults={'categoria_id': None}, view_func=categoria_view, methods=['GET'])
+app.add_url_rule('/categorias/', view_func=categoria_view, methods=['POST'])
+app.add_url_rule('/categorias/<int:categoria_id>', view_func=categoria_view, methods=['GET', 'PUT', 'DELETE'])
 
 @app.context_processor
 def categorias_disponibles():
@@ -105,27 +128,6 @@ def login():
 
     return render_template('login.html')
 
-# class UsuarioSchema(ma.Schema):
-#     id = fields.Integer(dump_only=True)
-#     username = fields.String()
-#     saludo_usuario = fields.Method('probando_metodo')
-
-#     def probando_metodo(self, obj):
-#         return f"Hola {obj.username}"
-
-# class UsuarioAdminSchema(ma.Schema):
-#     password = fields.String()
-
-
-# @app.route('/users')
-# def get_all_users():
-#     # Obtener todos los usuarios de la base de datos
-#     usuarios = Usuario.query.all()
-#     usuarios_schema = UsuarioSchema().dump(usuarios, many=True)
-
-#     # Devolver la lista de usuarios como respuesta JSON
-#     return jsonify(usuarios_schema) 
-
 @app.route('/crear_posteo', methods=['GET', 'POST'])
 def crear_posteo():
     if 'user_id' not in session:
@@ -188,4 +190,3 @@ def logout_view():
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
-
