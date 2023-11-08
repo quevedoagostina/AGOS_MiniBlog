@@ -20,9 +20,8 @@ class UsuarioView(MethodView):
             if user:
                 return usuario_schema.jsonify(user)
             return jsonify({"message": "Usuario no encontrado"}), 404
-        else:
-            usuarios = Usuario.query.all()
-            return usuarios_schema.jsonify(usuarios)
+        usuarios = Usuario.query.all()
+        return usuarios_schema.jsonify(usuarios)
 
     def post(self):
         data = request.get_json()
@@ -48,7 +47,7 @@ class UsuarioView(MethodView):
 
         db.session.delete(user)
         db.session.commit()
-        return jsonify({"message": "Usuario eliminado"})
+        return jsonify({"message": "Usuario eliminado"}), 301
 
 class EntradaView(MethodView):
     def get(self, entrada_id):
@@ -57,9 +56,8 @@ class EntradaView(MethodView):
             if entrada:
                 return entrada_schema.jsonify(entrada)
             return jsonify({"message": "Entrada no encontrada"}), 404
-        else:
-            entradas = Entrada.query.all()
-            return entradas_schema.jsonify(entradas)
+        entradas = Entrada.query.all()
+        return entradas_schema.jsonify(entradas)
 
     def post(self):
         data = request.get_json()
